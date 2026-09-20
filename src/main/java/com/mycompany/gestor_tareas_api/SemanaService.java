@@ -25,9 +25,10 @@ public class SemanaService {
 
     public Semana guardar(Semana semana) { // guarda una semana nueva, y crea sus 5 días automáticamente
         Semana semanaGuardar = semanaRepository.save(semana); // guardo la semana primero, para que tenga su id real
+        String dias[] = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes"};
 
-        for (int i = 1; i <= 5; i++) { // repito esto exactamente 5 veces (i = 1, 2, 3, 4, 5)
-            diaRepository.save(new Dia(0, "Día " + i, semanaGuardar)); // creo un Dia nuevo, con nombre "Día 1", "Día 2"..., enlazado a la semana recién guardada
+        for (String dia : dias) { 
+            diaRepository.save(new Dia(0,  dia, semanaGuardar)); 
         }
 
         return semanaGuardar; // devuelvo la semana ya creada, con su id real

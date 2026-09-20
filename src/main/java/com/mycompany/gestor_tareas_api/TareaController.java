@@ -3,6 +3,7 @@ package com.mycompany.gestor_tareas_api;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,11 @@ public class TareaController {
     public Tarea completar(@PathVariable int id) {
         // "id" es el número de la tarea, viene escrito directamente en la URL (ej: /tareas/3/completar)
         return tareaService.completar(id); // le paso ese número al Service, que hace el cambio real
+    }
+    
+    @DeleteMapping ("/eliminar/{id}")
+    public Tarea eliminar (@PathVariable int id){
+        return tareaService.eliminar(id);
     }
     
     

@@ -79,5 +79,12 @@ public class TareaService {
         return tareaRepository.save(tareaReal); // guardo la tarea ya actualizada
     }
     
+    public Tarea eliminar (int tareaId){
+        Tarea tareaDel = tareaRepository.findById(tareaId)
+                .orElseThrow(() -> new IllegalArgumentException("tarea no encontrada")); // si no existe, aviso con un error
+       
+       tareaRepository.deleteById(tareaId);
+       return tareaDel;
+    }
     
 }
