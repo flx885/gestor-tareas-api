@@ -46,12 +46,12 @@
 
     h1.titulo {
         font-family: 'Pirata One', cursive;
-        font-size: 38px;
+        font-size: 34px;
         text-align: center;
         color: #ffcf7a;
         text-shadow: 2px 2px 0 #1a0f2e, -1px -1px 0 #1a0f2e, 1px -1px 0 #1a0f2e, -1px 1px 0 #1a0f2e;
         margin: 0;
-        padding: 160px 0 16px;
+        padding: 30px 0 10px;
         flex-shrink: 0;
     }
 
@@ -138,15 +138,15 @@
 
     .cofre {
         background: rgba(61,38,80,0.9);
-        border-left: 6px solid #d9832e;
-        border-radius: 10px;
-        padding: 12px 16px;
-        margin: 8px 0;
+        border-left: 5px solid #d9832e;
+        border-radius: 8px;
+        padding: 7px 12px;
+        margin: 4px 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
         transition: all 0.25s ease;
         animation: aparecer 0.3s ease;
     }
@@ -159,17 +159,23 @@
     }
     .cofre.completada .titulo-tarea { text-decoration: line-through; color: #a8a190; }
 
-    .titulo-tarea { font-weight: 700; color: #f3e3c3; }
-    .detalle-tarea { font-size: 13px; color: #c9b8a0; margin-top: 2px; }
+    .titulo-tarea { font-weight: 700; color: #f3e3c3; font-size: 14px; }
+    .detalle-tarea { font-size: 12px; color: #c9b8a0; margin-top: 1px; }
 
-    .acciones { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .acciones { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+    .acciones select {
+        width: auto;
+        padding: 5px 8px;
+        font-size: 12px;
+        margin: 0;
+    }
 
     button {
         border: 2px solid #1a0f2e;
-        border-radius: 8px;
-        padding: 8px 14px;
+        border-radius: 7px;
+        padding: 5px 10px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 13px;
         font-family: 'Merriweather', serif;
         font-weight: 700;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -181,6 +187,7 @@
     .btn-exito { background: #6fae52; color: #1a0f2e; }
     .btn-exito:disabled { background: #6b6355; color: #a8a190; cursor: default; transform: none; box-shadow: none; }
     .btn-reparto { background: #b5335a; color: #fff3d6; width: 100%; }
+    .btn-peligro { background: #7a1f2b; color: #fff3d6; }
 
     .btn-filtro {
         background: rgba(61,38,80,0.6);
@@ -354,13 +361,16 @@
 
 <script>
     const API_URL = "https://gestor-tareas-api-production-1f06.up.railway.app";
+    const APP_PASSWORD = "benfix"; // se manda en cada petición para que el backend la deje pasar
     let diasDisponibles = [];
     let todasLasTareas = [];
     let todasLasSemanas = [];
     let filtroActual = "pendientes";
 
     async function cargarSemanas() {
-        const respuesta = await fetch(`${API_URL}/semanas`);
+        const respuesta = await fetch(`${API_URL}/semanas`, {
+            headers: { "X-App-Password": APP_PASSWORD }
+        });
         todasLasSemanas = await respuesta.json();
 
         const lista = document.getElementById("listaSemanas");
@@ -385,7 +395,9 @@
     }
 
     async function cargarDias() {
-        const respuesta = await fetch(`${API_URL}/dias`);
+        const respuesta = await fetch(`${API_URL}/dias`, {
+            headers: { "X-App-Password": APP_PASSWORD }
+        });
         diasDisponibles = await respuesta.json();
     }
 
@@ -423,6 +435,7 @@
                     <button class="btn-exito" ${t.completada ? "disabled" : ""} onclick="completarTarea(${t.id})">
                         ${t.completada ? "☠️ Cumplida" : "☐ Marcar"}
                     </button>
+                    <button class="btn-peligro" onclick="eliminarTarea(${t.id})">🗑️ Eliminar</button>
                 </div>
             </div>
         `;
@@ -516,7 +529,9 @@
     }
 
     async function cargarTareas() {
-        const respuesta = await fetch(`${API_URL}/tareas`);
+        const respuesta = await fetch(`${API_URL}/tareas`, {
+            headers: { "X-App-Password": APP_PASSWORD }
+        });
         todasLasTareas = await respuesta.json();
         construirArbol();
     }
@@ -527,7 +542,7 @@
 
         const respuesta = await fetch(`${API_URL}/semanas`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "X-App-Password": APP_PASSWORD },
             body: JSON.stringify({ nombre: nombre })
         });
 
@@ -548,7 +563,7 @@
 
         const respuesta = await fetch(`${API_URL}/semanas/${semanaId}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "X-App-Password": APP_PASSWORD },
             body: JSON.stringify({ nombre: nuevoNombre })
         });
 
@@ -570,7 +585,7 @@
 
         const respuesta = await fetch(`${API_URL}/tareas`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "X-App-Password": APP_PASSWORD },
             body: JSON.stringify({ titulo: titulo, descripcion: descripcion, completada: false })
         });
 
@@ -590,7 +605,7 @@
 
         const respuesta = await fetch(`${API_URL}/tareas/${tareaId}/dia`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "X-App-Password": APP_PASSWORD },
             body: JSON.stringify({ diaId: parseInt(diaId) })
         });
 
@@ -605,7 +620,25 @@
 
     async function completarTarea(tareaId) {
         const respuesta = await fetch(`${API_URL}/tareas/${tareaId}/completar`, {
-            method: "PUT"
+            method: "PUT",
+            headers: { "X-App-Password": APP_PASSWORD }
+        });
+
+        if (!respuesta.ok) {
+            const error = await respuesta.text();
+            alert("Error: " + error);
+            return;
+        }
+
+        await cargarTareas();
+    }
+
+    async function eliminarTarea(tareaId) {
+        if (!confirm("¿Seguro que quieres eliminar esta misión?")) return;
+
+        const respuesta = await fetch(`${API_URL}/tareas/eliminar/${tareaId}`, {
+            method: "DELETE",
+            headers: { "X-App-Password": APP_PASSWORD }
         });
 
         if (!respuesta.ok) {
@@ -622,7 +655,8 @@
         if (!semanaId) return alert("Fondea primero una semana");
 
         const respuesta = await fetch(`${API_URL}/tareas/repartir/${semanaId}`, {
-            method: "POST"
+            method: "POST",
+            headers: { "X-App-Password": APP_PASSWORD }
         });
 
         if (!respuesta.ok) {
