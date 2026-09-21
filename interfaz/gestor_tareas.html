@@ -433,7 +433,7 @@
                     <select id="diaSelect${t.id}">${opcionesDias}</select>
                     <button class="btn-primario" onclick="asignarDia(${t.id})">📌 Mover</button>
                     <button class="btn-exito" ${t.completada ? "disabled" : ""} onclick="completarTarea(${t.id})">
-                        ${t.completada ? "☠️ Cumplida" : "☐ Marcar"}
+                        ${t.completada ? "☠️ Cumplida" : "☐ Completado"}
                     </button>
                     <button class="btn-peligro" onclick="eliminarTarea(${t.id})">🗑️ Eliminar</button>
                 </div>
